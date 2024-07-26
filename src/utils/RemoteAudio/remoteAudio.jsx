@@ -29,7 +29,8 @@ const RemoteAudio = () => {
         });
 
         connection.on(LiveTranscriptionEvents.Transcript, (data) => {
-          setTranscript(data.channel.alternatives[0].transcript);
+          setTranscript((prev) => prev + ' ' + data.channel.alternatives[0].transcript);
+          console.log(data.channel.alternatives[0].transcript);
         });
 
         connection.on(LiveTranscriptionEvents.Metadata, (data) => {
@@ -43,16 +44,27 @@ const RemoteAudio = () => {
         const url = 'public/Toast Funny Story when he & his Friend Met a R_cist Woman.mp3';
         fetch(url)
           .then((r) => r.body)
-          .then((res) => {
-            res.on('readable', () => {
-              connection.send(res.read());
+          .then((body) => {
+            const reader = body.getReader();
+            const read = async () => {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) {
+                      console.log('Stream complete');
+                      // Change 2: Call connection.finish() to properly close the connection
+                      connection.requestClose();
+                      break;
+                    }
+                    connection.send(value);
+                }
+              };
+              read();
             });
-          });
-      });
-    };
-
-    live();
-  }, []);
+        });
+      };
+  
+      live();
+    }, []);
 
   return (
     <div className="container">
@@ -62,6 +74,6 @@ const RemoteAudio = () => {
   );
 };
 
-live()
+
 
 export default RemoteAudio;
