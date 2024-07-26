@@ -1,35 +1,31 @@
-// Example filename: index.js
-
-// const { createClient, LiveTranscriptionEvents } = require("@deepgram/sdk");
-// const fetch = require("cross-fetch");
-// const dotenv = require("dotenv");
-// dotenv.config();
-
-
-// utils/RemoteAudio.jsx
 import React, { useEffect, useState } from 'react';
 import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 import fetch from 'cross-fetch';
 
-const RAudio = () => {
+const RemoteAudio = () => {
   const [transcript, setTranscript] = useState('');
 
   useEffect(() => {
     const live = async () => {
-      // Use the environment variable directly
-      const deepgram = createClient(process.env.REACT_APP_DG_API_KEY);
+      const apiKey = import.meta.env.VITE_DG_API_KEY;
+      if (!apiKey) {
+        console.error('Deepgram API key is not defined');
+        return;
+      }
+
+      const deepgram = createClient(apiKey);
 
       const connection = deepgram.listen.live({
-        model: "nova-2",
-        language: "en-US",
+        model: 'nova-2',
+        language: 'en-US',
         smart_format: true,
       });
 
       connection.on(LiveTranscriptionEvents.Open, () => {
-        console.log("Connection opened.");
+        console.log('Connection opened.');
 
         connection.on(LiveTranscriptionEvents.Close, () => {
-          console.log("Connection closed.");
+          console.log('Connection closed.');
         });
 
         connection.on(LiveTranscriptionEvents.Transcript, (data) => {
@@ -44,11 +40,11 @@ const RAudio = () => {
           console.error(err);
         });
 
-        const url = "https://www.youtube.com/watch?v=BTb7JLXJVIs&t=3713s";
+        const url = 'public/Toast Funny Story when he & his Friend Met a R_cist Woman.mp3';
         fetch(url)
           .then((r) => r.body)
           .then((res) => {
-            res.on("readable", () => {
+            res.on('readable', () => {
               connection.send(res.read());
             });
           });
@@ -66,50 +62,6 @@ const RAudio = () => {
   );
 };
 
+live()
 
-export default RAudio;
-
-// // URL for the realtime streaming audio you would like to transcribe
-// const url = "https://www.youtube.com/watch?v=BTb7JLXJVIs&t=3713s";
-
-// const live =  () => {
-//   // STEP 1: Create a Deepgram client using the API key
-//   const deepgram = createClient(process.env.DG_API_KEY);
-
-//   // STEP 2: Create a live transcription connection
-//   const connection = deepgram.listen.live({
-//     model: "nova-2",
-//     language: "en-US",
-//     smart_format: true,
-//   });
-
-//   // STEP 3: Listen for events from the live transcription connection
-//   connection.on(LiveTranscriptionEvents.Open, () => {
-//     connection.on(LiveTranscriptionEvents.Close, () => {
-//       console.log("Connection closed.");
-//     });
-
-//     connection.on(LiveTranscriptionEvents.Transcript, (data) => {
-//       console.log(data.channel.alternatives[0].transcript);
-//     });
-
-//     connection.on(LiveTranscriptionEvents.Metadata, (data) => {
-//       console.log(data);
-//     });
-
-//     connection.on(LiveTranscriptionEvents.Error, (err) => {
-//       console.error(err);
-//     });
-
-//     // STEP 4: Fetch the audio stream and send it to the live transcription connection
-//     fetch(url)
-//       .then((r) => r.body)
-//       .then((res) => {
-//         res.on("readable", () => {
-//           connection.send(res.read());
-//         });
-//       });
-//   });
-// };
-
-// live()
+export default RemoteAudio;
