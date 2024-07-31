@@ -1,5 +1,6 @@
 import './App.css'
-import RAudio from './utils/RemoteAudio/remoteAudio'; 
+import RecAudio from './utils/RecordAudio/recordAudio'; 
+import RemoteAudio from './utils/RemoteAudio/remoteAudio';
 
 function App() {
   console.log('hello world');
@@ -8,7 +9,7 @@ function App() {
     <>
     
     <div className="container">
-      <RAudio />
+      <RecAudio />
     </div>
 
     </>
