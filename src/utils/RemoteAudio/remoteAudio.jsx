@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 import fetch from 'cross-fetch';
 
-const RemoteAudio = () => {
+const RAudio = () => {
   const [transcript, setTranscript] = useState('');
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const RemoteAudio = () => {
           console.error(err);
         });
 
-        const url = 'public/Toast Funny Story when he & his Friend Met a R_cist Woman.mp3';
+        const url = 'public/Eminem.mp3';
         fetch(url)
           .then((r) => r.body)
           .then((body) => {
@@ -64,6 +64,8 @@ const RemoteAudio = () => {
       };
   
       live();
+
+      
     }, []);
 
   return (
@@ -76,4 +78,4 @@ const RemoteAudio = () => {
 
 
 
-export default RemoteAudio;
+export default RAudio;
