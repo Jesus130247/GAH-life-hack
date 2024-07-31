@@ -4,7 +4,6 @@ import fetch from 'cross-fetch';
 
 const RAudio = () => {
   const [transcript, setTranscript] = useState('');
-
   useEffect(() => {
     const live = async () => {
       const apiKey = import.meta.env.VITE_DG_API_KEY;
