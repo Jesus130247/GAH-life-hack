@@ -33,7 +33,8 @@ const RecordAudio = () => {
           if (incoming && incoming.trim() && received.is_final) {
             setTranscript((prev) => `${prev} ${incoming}`.trim());
           }
-          console.log(received);
+          // console.log(received);
+          console.log(transcript);
         };
 
         socket.onclose = () => {
